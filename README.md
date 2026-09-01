@@ -11,9 +11,12 @@ This is a production-oriented Retrieval-Augmented Generation (RAG) system built 
 
 ## Machine Learning Architecture
 * **Custom Bi-Encoder:** Built entirely from scratch using PyTorch. It features a Pre-LayerNorm architecture with Multi-Head Attention. The pipeline supports custom weight transfer mapping from Hugging Face (`all-MiniLM-L6-v2`) directly into this bespoke architecture.
-* **Training & Metrics:** Metrics: The model was fine-tuned on a subset of 50,000 samples from the CodeSearchNet dataset using InfoNCE Contrastive Loss. This domain-specific training improved Recall@1 from 11.2% to 64.1% (+52.9 percentage points) on the held-out test set.
+* **Training & Metrics:**  The model was fine-tuned on a subset of 50,000 samples from the CodeSearchNet dataset using InfoNCE Contrastive Loss. This domain-specific training improved Recall@1 from 11.2% to 65.9% (+54.7 percentage points) on the held-out test set.
 * **Precision Reranking:** After retrieving the top-K candidates from the vector space, a Cross-Encoder scores and reranks the documents to maximize contextual relevance before generation.
-* **Generation:** Utilizes the official `huggingface_hub` SDK to queryopenai/gpt-oss-120b. Strict system prompts are implemented to prevent hallucinations, forcing the model to answer strictly based on the retrieved context or admit a lack of data.
+* **Generation:** Utilizes the official `Hugging Face Hub SDK` to queryopenai/gpt-oss-120b. The system prompt instructs the model to answer only from the retrieved context and explicitly abstain when the context is insufficient.
+* **Training, Evaluation, and Technical Details**
+The custom Bi-Encoder was implemented in PyTorch with a dedicated training loop and fine-tuned using InfoNCE contrastive loss on a 50,000-sample subset of the CodeSearchNet dataset. The model was evaluated on a held-out test set using Recall@1, Recall@5, and Recall@10, while inference latency was measured to assess the retrieval speed.
+The retrieval model uses a custom Pre-LayerNorm Transformer architecture with Multi-Head Attention, Feed-Forward layers, and masked mean pooling. The implementation also supports loading pretrained MiniLM weights into the custom architecture. PyTorch model weights are loaded with weights_only=True to reduce the security risks associated with unsafe checkpoint deserialization.
 
 | Model | Recall@1 | Recall@5 | Recall@10 | Avg. Latency |
 | :--- | :---: | :---: | :---: | :---: |
