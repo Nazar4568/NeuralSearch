@@ -15,7 +15,6 @@ This is a production-oriented Retrieval-Augmented Generation (RAG) system built 
 * **Precision Reranking:** After retrieving the top-K candidates from the vector space, a Cross-Encoder scores and reranks the documents to maximize contextual relevance before generation.
 * **Generation:** Utilizes the official `huggingface_hub` SDK to queryopenai/gpt-oss-120b. Strict system prompts are implemented to prevent hallucinations, forcing the model to answer strictly based on the retrieved context or admit a lack of data.
 | Model | Recall@1 | Recall@5 | Recall@10 | Avg. Latency |
-| :--- | :--- | :--- | :--- | :--- |
 | MiniLM baseline | 11.5% | 21.0% | 27.1% | 14.88 ms |
 | Fine-tuned | **65.9%** | **83.4%** | **87.8%** | **10.04 ms** |
   ## Architecture
