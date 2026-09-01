@@ -26,7 +26,7 @@ Create a file named `.env` in the root directory of the project and add your Cla
 HF_API_KEY=hf_your_classic_token_here
 ```
 
-###2. Build and Run
+### 2. Build and Run
 Deploy the entire stack (FastAPI backend and Qdrant Vector DB) seamlessly using Docker.
 ```bash
 docker-compose up -d --build
@@ -34,7 +34,7 @@ docker-compose up -d --build
 
 Once the containers are running, access the Swagger UI documentation at: http://127.0.0.1:8000/docs
 
-###Usage Examples
+### Usage Examples
 Indexing Data (POST /index)
 Ingest raw text documents into the Qdrant database. The custom Bi-Encoder will automatically generate and store the dense embeddings.
 
