@@ -42,7 +42,7 @@ class TransformerBlock(nn.Module):
         self.norm1 =nn.LayerNorm(d_model)
         self.norm2 = nn.LayerNorm(d_model)
 
-    def forward(self, x: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+    def forward(self, x: torch.Tensor, mask: torch.Tensor = None) -> Tuple[torch.Tensor, torch.Tensor]:
         """
         Passes the input tensor through a single Transformer block using Pre-LN architecture.
 
@@ -57,8 +57,8 @@ class TransformerBlock(nn.Module):
                 - The updated hidden states of shape [batch_size, seq_len, d_model].
                 - The attention weights from the Multi-Head Attention layer.
         """
-        x =  self.norm1(x)
-        context_vector, attn_weights =  self.attention(x)
+        x = self.norm1(x)
+        context_vector, attn_weights = self.attention(x, mask=mask)
         x = x + context_vector
 
         x = self.norm2(x)

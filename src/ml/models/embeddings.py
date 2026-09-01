@@ -1,5 +1,4 @@
 import torch.nn as nn
-from transformers import AutoModel
 import torch
 
 class TextEmbeddings(nn.Module):

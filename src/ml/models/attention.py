@@ -19,12 +19,13 @@ class MultiHeadAttention(nn.Module):
         self.v_proj = nn.Linear(d_model, d_model)
         self.out_proj = nn.Linear(d_model, d_model)
 
-    def forward(self, x: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+    def forward(self, x: torch.Tensor, mask: torch.Tensor = None) -> Tuple[torch.Tensor, torch.Tensor]:
         """
         Passes the input tensor through the Multi-Head Attention mechanism.
 
         Args:
             x (torch.Tensor): Input tensor of shape [batch_size, seq_len, d_model].
+            mask: torch.Tensor = None
 
         Returns:
             Tuple[torch.Tensor, torch.Tensor]:
@@ -37,6 +38,9 @@ class MultiHeadAttention(nn.Module):
         v = self.v_proj(x).view(batch_size, seq_len, self.num_heads, self.head_dim).transpose(1,2)
 
         scores = (q @ k.transpose(-2, -1)) / math.sqrt(self.head_dim)
+
+        if mask is not None:
+            scores.masked_fill_(mask.unsqueeze(1).unsqueeze(1) == 0.,value =-1e9)
 
         attn_weights = torch.nn.functional.softmax(scores, dim=-1)
         context_vector = torch.matmul(attn_weights, v).transpose(1, 2).contiguous().view(batch_size, seq_len, self.d_model)
